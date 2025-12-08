@@ -11,7 +11,7 @@ export function Posts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isFetching, isError, error } = useQuery({
     queryKey: ['posts', currentPage],
     queryFn: () => fetchPosts(currentPage),
     staleTime: 5000,
@@ -26,6 +26,7 @@ export function Posts() {
   }, [currentPage, queryclient]);
 
   if (isLoading) return <h3>Loading...</h3>;
+  if (isFetching) return <h3>Fetching...</h3>;
   if (isError)
     return (
       <>
@@ -52,7 +53,7 @@ export function Posts() {
         >
           Previous page
         </button>
-        <span>Page {currentPage + 1}</span>
+        <span>Page {currentPage}</span>
         <button
           disabled={currentPage >= 9}
           onClick={() => {
