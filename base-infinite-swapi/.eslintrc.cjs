@@ -1,23 +1,30 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { node: true, browser: true, es2021: true },
   extends: [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react/jsx-runtime",
-    "plugin:react-hooks/recommended",
-    "plugin:@tanstack/eslint-plugin-query/recommended",
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
   ],
-  ignorePatterns: ["dist", ".eslintrc.cjs"],
-  parserOptions: { ecmaVersion: "latest", sourceType: "module" },
-  settings: { react: { version: "18.2" } },
-  plugins: ["react-refresh"],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'prettier'],
   rules: {
-    "react-refresh/only-export-components": [
-      "warn",
-      { allowConstantExport: true },
+    'prettier/prettier': [
+      'error',
+      {
+        semi: true,
+        singleQuote: true,
+        trailingComma: 'es5',
+        tabWidth: 2,
+        printWidth: 100,
+        bracketSpacing: true,
+        arrowParens: 'avoid',
+        endOfLine: 'lf',
+      },
     ],
-    "react/prop-types": "off",
-    "no-unused-vars": "warn",
+    // ✅ Enforce at most 1 blank line
+    'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
+    // ✅ Optional cleanup
+    'no-trailing-spaces': 'error',
   },
 };
