@@ -15,10 +15,12 @@ export function Posts() {
     mutationFn: postId => deletePost(postId),
   });
 
-  const { data, isLoading, isFetching, isError, error } = useQuery({
+  const { data, isLoading, isFetching, isError, error, isRefetching } = useQuery({
     queryKey: ['posts', currentPage],
     queryFn: () => fetchPosts(currentPage),
     staleTime: 5000,
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
   });
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export function Posts() {
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isFetching) return <h3>Fetching...</h3>;
+  if (isRefetching) return <h3>Refetching...</h3>;
   if (isError)
     return (
       <>
