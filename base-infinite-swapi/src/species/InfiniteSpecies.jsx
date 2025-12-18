@@ -1,15 +1,44 @@
-import InfiniteScroll from "react-infinite-scroller";
-import { Species } from "./Species";
+import InfiniteScroll from 'react-infinite-scroller';
+import { Species } from './Species';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-const initialUrl = "https://swapi.py4e.com/api/species/";
-const fetchUrl = async (url) => {
+const initialUrl = 'https://swapi.py4e.com/api/species/';
+const fetchUrl = async url => {
   const response = await fetch(url);
   return response.json();
 };
-fetchUrl(initialUrl).then(d => console.log(d))
-
 
 export function InfiniteSpecies() {
-  // TODO: get data for InfiniteScroll via React Query
-  return <InfiniteScroll />;
+  const { data, isLoading, isError, error, hasNextPage, fetchNextPage, isFetching } =
+    useInfiniteQuery({
+      queryKey: ['sw-species'],
+      queryFn: ({ url = initialUrl }) => fetchUrl(url),
+      getNextPageParam: page => page.next || undefined,
+    });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>{error.toString()}</div>;
+
+  return (
+    <>
+      {isFetching && <div className="loading">Fetching...</div>}
+      <InfiniteScroll
+        loadMore={() => {
+          if (!isFetching) fetchNextPage();
+        }}
+        hasMore={hasNextPage}
+      >
+        {data.pages.map(page =>
+          page.results.map(specie => (
+            <Species
+              averageLifespan={specie.average_lifespan}
+              language={specie.language}
+              name={specie.name}
+              key={specie.created}
+            ></Species>
+          ))
+        )}
+      </InfiniteScroll>
+    </>
+  );
 }
