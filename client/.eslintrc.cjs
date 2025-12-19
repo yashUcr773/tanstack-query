@@ -26,7 +26,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: { ecmaVersion: "latest", sourceType: "module" },
   settings: { react: { version: "18.2" } },
-  plugins: ["react-refresh", "simple-import-sort"],
+  plugins: ["react-refresh", "simple-import-sort", "@tanstack/query"],
   rules: {
     "react-refresh/only-export-components": [
       "warn",
@@ -59,6 +59,10 @@ module.exports = {
 
     // eliminate distracting red squiggles while writing tests
     "vitest/expect-expect": "off",
+    "@tanstack/query/exhaustive-deps": "error",
+    "@tanstack/query/no-deprecated-options": "error",
+    "@tanstack/query/prefer-query-object-syntax": "error",
+    "@tanstack/query/stable-query-client": "error"
   },
   // don't flag vitest globals like `describe` and `test`
   globals: {
