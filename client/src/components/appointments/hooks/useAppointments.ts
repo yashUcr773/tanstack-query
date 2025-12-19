@@ -1,19 +1,17 @@
-import dayjs from "dayjs";
-import { useState } from "react";
+import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import { useState } from 'react';
 
-import { AppointmentDateMap } from "../types";
-import { getAvailableAppointments } from "../utils";
-import { getMonthYearDetails, getNewMonthYear } from "./monthYear";
+import { AppointmentDateMap } from '../types';
+import { getAvailableAppointments } from '../utils';
+import { getMonthYearDetails, getNewMonthYear } from './monthYear';
 
-import { useLoginData } from "@/auth/AuthContext";
-import { axiosInstance } from "@/axiosInstance";
-import { queryKeys } from "@/react-query/constants";
+import { useLoginData } from '@/auth/AuthContext';
+import { axiosInstance } from '@/axiosInstance';
+import { queryKeys } from '@/react-query/constants';
 
 // for useQuery call
-async function getAppointments(
-  year: string,
-  month: string
-): Promise<AppointmentDateMap> {
+async function getAppointments(year: string, month: string): Promise<AppointmentDateMap> {
   const { data } = await axiosInstance.get(`/appointments/${year}/${month}`);
   return data;
 }
@@ -38,7 +36,7 @@ export function useAppointments() {
   // setter to update monthYear obj in state when user changes month in view,
   // returned in hook return object
   function updateMonthYear(monthIncrement: number): void {
-    setMonthYear((prevData) => getNewMonthYear(prevData, monthIncrement));
+    setMonthYear(prevData => getNewMonthYear(prevData, monthIncrement));
   }
   /** ****************** END 1: monthYear state ************************* */
   /** ****************** START 2: filter appointments  ****************** */
@@ -61,7 +59,11 @@ export function useAppointments() {
   //
   //    2. The getAppointments query function needs monthYear.year and
   //       monthYear.month
-  const appointments: AppointmentDateMap = {};
+
+  const { data: appointments = {} } = useQuery({
+    queryKey: [queryKeys.appointments, monthYear.year, monthYear.month],
+    queryFn: () => getAppointments(monthYear.year, monthYear.month),
+  });
 
   /** ****************** END 3: useQuery  ******************************* */
 
