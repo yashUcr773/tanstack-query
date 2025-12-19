@@ -12,7 +12,7 @@ export function InfiniteSpecies() {
   const { data, isLoading, isError, error, hasNextPage, fetchNextPage, isFetching } =
     useInfiniteQuery({
       queryKey: ['sw-species'],
-      queryFn: ({ url = initialUrl }) => fetchUrl(url),
+      queryFn: ({ pageParam = initialUrl }) => fetchUrl(pageParam),
       getNextPageParam: page => page.next || undefined,
     });
 
