@@ -15,11 +15,6 @@ export function useTreatments(): Treatment[] {
   const { data = [] } = useQuery({
     queryKey: [queryKeys.treatments],
     queryFn: getTreatments,
-    staleTime: 10 * 60 * 1000,
-    gcTime: 20 * 60 * 1000,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
   });
 
   return data;
