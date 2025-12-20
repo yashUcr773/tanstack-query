@@ -3,11 +3,13 @@ import { Field, Form, Formik } from 'formik';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { usePatchUser } from './hooks/usePatchUser';
+import { mutationKey, usePatchUser } from './hooks/usePatchUser';
 import { useUser } from './hooks/useUser';
 import { UserAppointments } from './UserAppointments';
 
 import { useLoginData } from '@/auth/AuthContext';
+import { useMutationState } from '@tanstack/react-query';
+import { User } from '@shared/types';
 
 export function UserProfile() {
   const { userId } = useLoginData();
@@ -30,12 +32,21 @@ export function UserProfile() {
     phone: string;
   }
 
+  const pendingData = useMutationState({
+    filters: { mutationKey: [mutationKey], status: 'pending' },
+    select: mutation => {
+      return mutation.state.variables as User;
+    },
+  });
+
+  const pendingUser = pendingData?.[0] || null;
+
   return (
     <Flex minH="84vh" textAlign="center" justify="center">
       <Stack spacing={8} mx="auto" w="xl" py={12} px={6}>
         <UserAppointments />
         <Stack textAlign="center">
-          <Heading>Information for {user?.name}</Heading>
+          <Heading>Information for {pendingUser ? pendingUser.name : user?.name}</Heading>
         </Stack>
         <Box rounded="lg" bg="white" boxShadow="lg" p={8}>
           <Formik
