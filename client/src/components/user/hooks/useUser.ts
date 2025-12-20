@@ -38,6 +38,9 @@ export function useUser() {
     queryClient.cancelQueries({
       queryKey: [queryKeys.user],
     });
+    queryClient.cancelQueries({
+      queryKey: [queryKeys.appointments, queryKeys.user],
+    });
   }
 
   return { user, updateUser, clearUser };
