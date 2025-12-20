@@ -35,7 +35,7 @@ export function useUser() {
 
   // meant to be called from useAuth
   function clearUser() {
-    queryClient.refetchQueries({
+    queryClient.cancelQueries({
       queryKey: [queryKeys.user],
     });
   }
